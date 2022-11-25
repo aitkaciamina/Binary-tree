@@ -1,0 +1,146 @@
+#include "Binary_tree.h"
+#include<iostream>
+#define Count 10
+using namespace std;
+
+Binary_tree::Binary_tree()
+{
+	root = NULL;
+}
+void Binary_tree::insert(int key)
+{
+	if (root != NULL)
+		insert_utility(key ,root );
+	else
+	{
+		root = new noeud;
+		root->key = key;
+		root->left = NULL;
+		root->right = NULL;
+	}
+}
+noeud* Binary_tree::search(int key)
+{
+	return search_utility(key, root);
+}
+noeud* Binary_tree::delete_node(int key)
+{
+	return delete_node_utility(key, root);
+}
+void Binary_tree::insert_utility(int k, noeud* leaf)
+{
+	if (k < leaf->key)
+	{
+		if (leaf->left != NULL)
+			insert_utility(k,leaf->left);
+		else
+		{
+			leaf->left = new noeud;
+			leaf->left->key = k;
+			leaf->left->left = NULL;
+			leaf->left->right = NULL;
+		}
+	}
+
+	else if (k > leaf->key)
+	{
+		if (leaf->right != NULL)
+			insert_utility(k, leaf->right);
+		else
+		{
+			leaf->right = new noeud;
+			leaf->right->key = k;
+			leaf->right->right=NULL;
+			leaf->right->left = NULL;
+		}
+	}
+}
+noeud * Binary_tree::search_utility(int key, noeud* leaf)
+{
+	if (leaf != NULL)
+	{
+		if (key == leaf->key)
+			return leaf;
+		else if (key < leaf->key)
+		{
+			return search_utility(key, leaf->left);
+		}
+		else if (key > leaf->key)
+		{
+			return search_utility(key, leaf->right);
+		}
+	}
+	else
+		return NULL;
+}
+noeud* Binary_tree::delete_node_utility(int key, noeud *leaf)
+{
+	if (leaf == NULL)
+		return NULL;
+	if (key < leaf->key)
+		leaf->left = delete_node_utility(key, leaf->left);
+	else if (key > leaf->key)
+		leaf->right = delete_node_utility(key, leaf->right);
+	else
+	{
+		if (leaf->left == NULL&& leaf ==NULL)
+		{
+			return NULL;
+		}
+		else if (leaf->left==NULL)
+		{
+			noeud *tmp = leaf->right;
+			free(leaf);
+			return tmp;
+		}
+		else if (leaf->right==NULL)
+		{
+			noeud* tmp = leaf->left;
+			free(leaf);
+			return tmp;
+		}
+		noeud* tmp = find_min(leaf->right);
+		leaf->key = tmp->key;
+		leaf->right = delete_node_utility(key, root->right);
+	}
+	return leaf;
+}
+noeud* Binary_tree::find_min(noeud* leaf)
+{
+	noeud* current = leaf;
+	while (current && current->left != NULL)
+		current = current->left;
+	return current;
+}
+void Binary_tree::print2DUtil()
+{
+	print2DUtil_utility(this->root, 0 );
+}
+void Binary_tree::print2DUtil_utility(noeud* leaf, int space)
+{
+	if (leaf == NULL)
+		return;
+	space += Count;
+	print2DUtil_utility(leaf->right, space);
+	cout << endl;
+	for (int i = Count; i < space; i++)
+		cout << " ";
+	cout << leaf->key << "\n";
+
+	// Process left child
+	print2DUtil_utility(leaf->left, space);
+}
+int Binary_tree::add_nodes_utility(noeud *leaf)
+{
+	int sum = 0;
+	if (leaf == NULL)
+		return 0;
+	else
+	{
+		return (leaf->key + add_nodes_utility(leaf->right) + add_nodes_utility(leaf->left));
+	}
+}
+int Binary_tree::add_nodes()
+{
+	return add_nodes_utility(this->root);
+}
