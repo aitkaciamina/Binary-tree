@@ -1,0 +1,25 @@
+#pragma once
+struct noeud
+{
+	int key;
+	noeud* left, * right;
+};
+
+class Binary_tree
+{
+public:
+	Binary_tree();
+	void insert(int key);
+	noeud *search(int key);
+	noeud* delete_node(int key);
+	noeud* find_min(noeud * leaf);
+	void print2DUtil();
+	int add_nodes();
+private:
+	noeud* root;
+	void insert_utility(int key, noeud *leaf);
+	noeud *search_utility(int key, noeud *leaf);
+	noeud* delete_node_utility(int key,noeud *leaf);
+	void print2DUtil_utility(noeud* root, int space);
+	int add_nodes_utility(noeud* leaf);
+};
